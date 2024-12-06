@@ -3,6 +3,8 @@
 #include <utility>
 #include <array>
 #include <thread>
+#include <cstring>
+#include <string>
 #include "sys/ioctl.h"
 #include "termios.h"
 #include "stdio.h"
@@ -55,7 +57,7 @@ void add_snake(const std::vector<std::pair<int, int>> &snake, std::vector<int> &
 {
   // 👉️ Your code here 👈️
   for (auto& corps : snake){
-    bg[corps.second *nx + corps.first] = 3
+    bg[corps.second *nx + corps.first] = 3;
   }
 }
 
@@ -63,37 +65,43 @@ void remove_snake(const std::vector<std::pair<int, int>> &snake, std::vector<int
 {
   // 👉️ Your code here 👈️
     for (auto& corps : snake){
-    bg[corps.second *nx + corps.first] = 0
+    bg[corps.second *nx + corps.first] = 0;
 }
 }
 
 std::array<int, 2> snake_movement(char key)
 {
   // 👉️ Your code here 👈️
-  if(key == "z"){
-      return std::array<int,2> dxdy {0,1};
-  }
+  std::array<int, 2> dxdy = {0, 0};
+    const char* cz = "z";
+    const char* cq = "q";
+    const char* cs = "s";
+    const char* cd = "d";
 
-  if(key == "q"){
-      return std::array<int,2> dxdy {-1,0};
-  }
-    
-  if(key == "s"){
-      return std::array<int,2> dxdy {0,-1};
-  }
-  
-  if(key == "d"){
-      return std::array<int,2> dxdy {1,0};
-  }
+    if (key == cz[0]) {
+        dxdy = {0, 1};  // Déplacement vers le haut
+    } 
+    else if (key == cq[0]) {
+        dxdy = {-1, 0};  // Déplacement vers la gauche
+    } 
+    else if (key == cs[0]) {
+        dxdy = {0, -1};  // Déplacement vers le bas
+    } 
+    else if (key == cd[0]) {
+        dxdy = {1, 0};   // Déplacement vers la droite
+    }
+
+    return dxdy;  // Retourne la valeur de dxdy
 }
 
 bool verifyBorder(const std::vector<std::pair<int, int>> &snake, int nx, int ny)
 {
-  tete = snake[0]
+  std::pair <int,int> tete;
+  tete = snake[0];
   if((tete.first == nx) || (tete.first == 0) || (tete.second == ny) ||(tete.second == 0)){
-    return(false)
+    return(false);
   }
-  return(true)
+  return(true);
 }
 
 std::vector<std::pair<int, int>> setupSnake(int snake_len)
@@ -110,22 +118,22 @@ std::vector<std::pair<int, int>> setupSnake(int snake_len)
 
 void update_snake_coordinates(std::vector<std::pair<int, int>> &snake, bool eat, std::array<int, 2> dxdy)
 {
-  if(eat == True){
+  if(eat == true){
     std::pair<int,int> ajout;
-    dernier = std::back(snake);
+    std::pair<int, int>& dernier = snake.back();
     ajout.first = dernier.first ;
     ajout.second = dernier.second -1;
     snake.push_back(ajout);
   }
   
-  for(int i =0, snake.size()-1,i++){
+  for(int i =0; snake.size()-1;i++){
       snake[snake.size()-i] = snake[snake.size()-i-1];
   }
 
-  std::pair <int,2> tete;
+  std::pair <int,int> tete;
   tete.first = snake[0].first + dxdy[0];
   tete.second = snake[0].second +dxdy[1];
-  snake[0] = tete
+  snake[0] = tete;
 }
 
 void startGame(const int &lap, const int &nx, const int &ny, std::vector<std::pair<int, int>> &snake, std::vector<int> &bg)
@@ -134,7 +142,7 @@ void startGame(const int &lap, const int &nx, const int &ny, std::vector<std::pa
   std::array<int, 2> dxdy = {1, 0};
   std::array<int, 2> food = {0, 0};
   internal::createFood(bg, food, nx, ny);
-  while (true)
+  while (true);
   {
     internal::frameSleep(lap);
     if (internal::keyEvent())
